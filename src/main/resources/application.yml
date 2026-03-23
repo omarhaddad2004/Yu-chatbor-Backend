@@ -1,0 +1,62 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/omarsbot # Updated port to match docker-compose
+    username: omarsbot
+    password: dbpass
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    clean-disabled: true
+
+app:
+  jwt:
+    secret: "change-this-to-a-very-long-random-secret-key-32+chars"
+    expiration-ms: 86400000
+
+huggingface:
+  api-token: "nah urrr token "
+  model: "BAAI/bge-m3"
+
+ollama:
+  base-url: "http://localhost:11434"
+  model: "bge-m3"
+  chat-model: "qwen2.5:7b"
+
+gemini:
+  api:
+    keys: "${GEMINI_API_KEY},${key-2},${key-3},${key-4},${key-5},${key-6}"
+  chat:
+    model: "gemini-2.5-flash"
+  embedding:
+    max-dimensions: 1024
+
+rag:
+  allowed-domain: "yu.edu.jo"
+  min-score: 0.0
+
+crawler:
+  base-domain: "yu.edu.jo"
+  max-pages-per-root: 3500
+  max-depth: 6
+
+cleaning:
+  ai-enabled: false
+
+ingestion:
+  fixed-delay-ms: 172800000

@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  pg-omarsbot:
+    image: pgvector/pgvector:pg16
+    container_name: pg-omarsbot
+    environment:
+      POSTGRES_DB: omarsbot
+      POSTGRES_USER: omarsbot
+      POSTGRES_PASSWORD: careurpass
+    ports:
+      - "5434:5432" # Mapped to 5434 to avoid port conflicts
+    volumes:
+      - pgdata_omarsbot_v2:/var/lib/postgresql/data # V2 volume for clean initialization
+
+  es-yu:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    container_name: es-yu
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"   # Elasticsearch Port
+      - "9300:9300"   # Internal communication port
+    volumes:
+      - esdata_v2:/usr/share/elasticsearch/data # V2 volume for clean initialization
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.0
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es-yu:9200
+    ports:
+      - "5601:5601"   # Kibana Port
+    depends_on:
+      - es-yu
+
+volumes:
+  pgdata_omarsbot_v2: # Defined V2 volumes
+  esdata_v2:
